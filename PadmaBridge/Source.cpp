@@ -9,10 +9,10 @@
 double cameraAngle;
 double move_X, move_Y, move_Z;
 int canDrawGrid, canDrawAxis;
-double speed = 5, ang_speed = .1;
+double speed = 15, ang_speed = .1;
 double cameraRadius, cameraHeight, cameraAngleDelta;
 int num_texture = -1;
-GLuint waterImage, stoneImage, stone2Image;
+GLuint waterImage, stoneImage, stone2Image, roadImage;
 
 /***************************** VECTOR structure **********************************/
 
@@ -128,6 +128,7 @@ void loadImage()
 	waterImage = LoadBitmapImage("images/water.bmp");
 	stoneImage = LoadBitmapImage("images/stone.bmp");
 	stone2Image = LoadBitmapImage("images/stone2.bmp");
+	roadImage = LoadBitmapImage("images/road.bmp");
 	printf("Load successful");
 }
 
@@ -229,6 +230,226 @@ void cube(float x = 1, float y = 1, float z = 1, GLuint texture = 0) {
 			glVertex3f(-x, -y, -z);
 		}glEnd();
 	}glDisable(GL_TEXTURE_2D);
+}
+
+void topRoad(float x = 1, float y = 1, float z = 1, GLuint texture = stoneImage) {
+
+	// FrontSide
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(-x, y, z);
+			glTexCoord2f(0, 0);
+			glVertex3f(-x, y, -z);
+			glTexCoord2f(1, 0);
+			glVertex3f(x, y, -z);
+			glTexCoord2f(1, 1);
+			glVertex3f(x, y, z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+
+	// BackSide
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(-x, -y, z);
+			glTexCoord2f(0, 0);
+			glVertex3f(-x, -y, -z);
+			glTexCoord2f(1, 0);
+			glVertex3f(x, -y, -z);
+			glTexCoord2f(1, 1);
+			glVertex3f(x, -y, z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+
+	// RightSide
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(x, y, z);
+			glTexCoord2f(0, 0);
+			glVertex3f(x, y, -z);
+			glTexCoord2f(1, 0);
+			glVertex3f(x, -y, -z);
+			glTexCoord2f(1, 1);
+			glVertex3f(x, -y, z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+
+	// LeftSide
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(-x, y, z);
+			glTexCoord2f(0, 0);
+			glVertex3f(-x, y, -z);
+			glTexCoord2f(1, 0);
+			glVertex3f(-x, -y, -z);
+			glTexCoord2f(1, 1);
+			glVertex3f(-x, -y, z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+
+	// Top Side
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, roadImage);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(-x, y, z);
+			glTexCoord2f(0, 0);
+			glVertex3f(x, y, z);
+			glTexCoord2f(1, 0);
+			glVertex3f(x, -y, z);
+			glTexCoord2f(1, 1);
+			glVertex3f(-x, -y, z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+
+	// Bottom Side
+	glEnable(GL_TEXTURE_2D); {
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS); {
+			glTexCoord2f(0, 1);
+			glVertex3f(-x, y, -z);
+			glTexCoord2f(0, 0);
+			glVertex3f(x, y, -z);
+			glTexCoord2f(1, 0);
+			glVertex3f(x, -y, -z);
+			glTexCoord2f(1, 1);
+			glVertex3f(-x, -y, -z);
+		}glEnd();
+	}glDisable(GL_TEXTURE_2D);
+}
+
+
+void sideAngle(float x = 0) {
+	glPushMatrix(); {
+		glTranslatef(x, 70, 200);
+		glRotatef(-30, 1, 0, 0);
+		cube(15, 5, 90, stoneImage);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(x, 0, 200);
+		glRotatef(30, 1, 0, 0);
+		cube(15, 5, 90, stoneImage);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(x, -70, 200);
+		glRotatef(-30, 1, 0, 0);
+		cube(15, 5, 90, stoneImage);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glTranslatef(x, 140, 200);
+		glRotatef(30, 1, 0, 0);
+		cube(15, 5, 90, stoneImage);
+	}glPopMatrix();
+}
+
+void singleRoad(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
+	
+	// Upper side
+	glPushMatrix(); {
+		glColor3f(0.4, 0, 0.2);
+		glTranslatef(0, 0, 300);
+		topRoad(300, 150);
+	}glPopMatrix();
+
+
+
+}
+
+void singleTrainLine(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
+	// Right
+	glPushMatrix(); {
+		glTranslatef(100, 0, 125);
+		cube(15, 150, 15, stone2Image);
+	}glPopMatrix();
+
+	//Left
+	glPushMatrix(); {
+		glTranslatef(-100, 0, 125);
+		cube(15, 150, 15, stone2Image);
+	}glPopMatrix();
+
+	// Top Right
+	glPushMatrix(); {
+		glTranslatef(100, 0, 270);
+		cube(15, 150, 15, stone2Image);
+	}glPopMatrix();
+
+	// Top Left
+	glPushMatrix(); {
+		glTranslatef(-100, 0, 270);
+		cube(15, 150, 15, stone2Image);
+	}glPopMatrix();
+
+	sideAngle(100);
+	sideAngle(-100);
+
+#pragma region Horizontal Beam
+	//horizontal Beam
+	glPushMatrix(); {
+		glColor3f(0.4, 0, 0.2);
+		glTranslatef(0, 0, 125);
+		cube(100, 3, 15, stone2Image);
+	}glPopMatrix();
+
+	//horizontal Beam
+	glPushMatrix(); {
+		glColor3f(0.4, 0, 0.2);
+		glTranslatef(0, -100, 125);
+		cube(100, 3, 15, stone2Image);
+	}glPopMatrix();
+
+	//horizontal Beam
+	glPushMatrix(); {
+		glColor3f(0.4, 0, 0.2);
+		glTranslatef(0, 100, 125);
+		cube(100, 3, 15, stone2Image);
+	}glPopMatrix();
+#pragma endregion
+
+
+	// Right line
+	glPushMatrix(); {
+		glTranslatef(25, 0, 143);
+		cube(2, 150, 5, stone2Image);
+	}glPopMatrix();
+
+	//Left Line
+	glPushMatrix(); {
+		glTranslatef(-25, 0, 143);
+		cube(2, 150, 5, stone2Image);
+	}glPopMatrix();
+
+	for (int i = 0; i <= 6; i++) {
+		//horizontal Beam
+		glPushMatrix(); {
+			glColor3f(0.4, 0, 0.2);
+			glTranslatef(0, 25*i, 146);
+			cube(25, 2, 1, stone2Image);
+		}glPopMatrix();
+
+		//horizontal Beam
+		glPushMatrix(); {
+			glColor3f(0.4, 0, 0.2);
+			glTranslatef(0, -25*i, 146);
+			cube(25, 2, 1, stone2Image);
+		}glPopMatrix();
+	}
 }
 
 
@@ -339,30 +560,17 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 
 		cube(50, 20, 20, stoneImage);
 
+		singleTrainLine();
+		singleRoad();
 	}glPopMatrix();
 }
 
-void singleBlock(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
-	// Right
-	glPushMatrix(); {
-		glTranslatef(42, 0, 125);
-		cube(3, 150, 15, stone2Image);
-	}glPopMatrix();
-
-	//Left
-	glPushMatrix(); {
-		glColor3f(0.4, 0, 0.2);
-		glTranslatef(-42, 0, 125);
-		cube(3, 150, 15, stone2Image);
-	}glPopMatrix();
-}
 
 void piller() {
 	for (int i = 0; i <= 8; i++) {
 		singlePiller(0, i*300);
 		singlePiller(0, i*-300);
 	}
-	
 }
 
 void waterBody() {
@@ -382,14 +590,14 @@ void waterBody() {
 	}glDisable(GL_TEXTURE_2D);
 }
 
-void block() {
-	singleBlock();
+void trainLine() {
+	singleTrainLine();
 }
 
 void myObjects() {
 	waterBody();
 	piller();
-	block();
+	//trainLine();
 	
 }
 
