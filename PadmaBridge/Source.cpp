@@ -132,6 +132,22 @@ void loadImage()
 	printf("Load successful");
 }
 
+void car(float x = 1, float y = 1, float z = 1) {
+	
+	glPushMatrix();{
+		glColor3f(0.5, 0.5, 0.5);
+		glTranslatef(0, 0, 15);
+		glScalef(40, 80, 20);
+		glutSolidCube(1);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+		glColor3f(0.2, 0.2, 0.2);
+		glTranslatef(20, -70, 10);
+		glRotatef(90, 0, 1, 0);
+		glutSolidTorus(2, 5, 20, 20);
+	}glPopMatrix();
+}
 
 void cube(float x = 1, float y = 1, float z = 1, GLuint texture = 0) {
 
@@ -336,39 +352,117 @@ void sideAngle(float x = 0) {
 	glPushMatrix(); {
 		glTranslatef(x, 70, 200);
 		glRotatef(-30, 1, 0, 0);
-		cube(15, 5, 90, stoneImage);
+		cube(15, 5, 90, stone2Image);
 	}glPopMatrix();
 
 	glPushMatrix(); {
 		glTranslatef(x, 0, 200);
 		glRotatef(30, 1, 0, 0);
-		cube(15, 5, 90, stoneImage);
+		cube(15, 5, 90, stone2Image);
 	}glPopMatrix();
 
 	glPushMatrix(); {
 		glTranslatef(x, -70, 200);
 		glRotatef(-30, 1, 0, 0);
-		cube(15, 5, 90, stoneImage);
+		cube(15, 5, 90, stone2Image);
 	}glPopMatrix();
 
 	glPushMatrix(); {
 		glTranslatef(x, 140, 200);
 		glRotatef(30, 1, 0, 0);
-		cube(15, 5, 90, stoneImage);
+		cube(15, 5, 90, stone2Image);
+	}glPopMatrix();
+}
+
+void singleLight(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
+	glPushMatrix(); {
+		glTranslated(x, y, z);
+		glRotatef(angle, rx, ry, rz);
+
+		glEnable(GL_TEXTURE_2D); {
+			glBindTexture(GL_TEXTURE_2D, stoneImage);
+			GLUquadricObj *obj = gluNewQuadric();
+			gluQuadricTexture(obj, GL_TRUE);
+			glTranslatef(0, 0, 300);
+			gluCylinder(obj, 3, 3, 300, 20, 20);
+		}glDisable(GL_TEXTURE_2D);
+
+		glPushMatrix(); {
+			glTranslatef(-15, 0, 301);
+			glEnable(GL_TEXTURE_2D); {
+				glBindTexture(GL_TEXTURE_2D, stoneImage);
+
+				double equ1[4];
+				equ1[0] = 1;
+				equ1[1] = 0;
+				equ1[2] = 0;
+				equ1[3] = 1;
+
+				double equ2[4];
+				equ2[0] = 0;
+				equ2[1] = 0;
+				equ2[2] = 1;
+				equ2[3] = 1;
+
+				glClipPlane(GL_CLIP_PLANE0, equ1);
+				glClipPlane(GL_CLIP_PLANE1, equ2);
+
+				glPushMatrix(); {
+					glPushMatrix(); {
+						glEnable(GL_CLIP_PLANE1); {
+							glEnable(GL_CLIP_PLANE0); {
+								glColor3f(1, 1, 1);
+								glPushMatrix(); {
+									glRotatef(90, 1, 0, 0);
+									glutSolidTorus(3, 15, 80, 150);
+								}glPopMatrix();
+							}glDisable(GL_CLIP_PLANE0);
+						}glDisable(GL_CLIP_PLANE1);
+					}glPopMatrix();
+				}glPopMatrix();
+
+			}glDisable(GL_TEXTURE_2D);
+
+		}glPopMatrix();
+
+		glPushMatrix(); {
+			glTranslatef(-30, 0, 315);
+			cube(20, 5, 2, stoneImage);
+		}glPopMatrix();
 	}glPopMatrix();
 }
 
 void singleRoad(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
-	
+
 	// Upper side
 	glPushMatrix(); {
 		glColor3f(0.4, 0, 0.2);
-		glTranslatef(0, 0, 300);
+		glTranslatef(0, 0, 290);
 		topRoad(300, 150);
 	}glPopMatrix();
 
+	// left side
+	glPushMatrix(); {
+		glTranslatef(290, 0, 310);
+		cube(5, 150, 20, stone2Image);
+	}glPopMatrix();
+
+	// right side
+	glPushMatrix(); {
+		glTranslatef(-290, 0, 310);
+		cube(5, 150, 20, stone2Image);
+	}glPopMatrix();
 
 
+	// right side
+	glPushMatrix(); {
+		glTranslatef(0, 0, 310);
+		cube(5, 150, 15, stone2Image);
+	}glPopMatrix();
+
+
+	singleLight(280, 0, -10);
+	singleLight(-280, 0, -10, 180, 0, 0, 1);
 }
 
 void singleTrainLine(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
@@ -404,21 +498,21 @@ void singleTrainLine(float x = 0, float y = 0, float z = 0, float angle = 0, flo
 	glPushMatrix(); {
 		glColor3f(0.4, 0, 0.2);
 		glTranslatef(0, 0, 125);
-		cube(100, 3, 15, stone2Image);
+		cube(100, 3, 15, stoneImage);
 	}glPopMatrix();
 
 	//horizontal Beam
 	glPushMatrix(); {
 		glColor3f(0.4, 0, 0.2);
 		glTranslatef(0, -100, 125);
-		cube(100, 3, 15, stone2Image);
+		cube(100, 3, 15, stoneImage);
 	}glPopMatrix();
 
 	//horizontal Beam
 	glPushMatrix(); {
 		glColor3f(0.4, 0, 0.2);
 		glTranslatef(0, 100, 125);
-		cube(100, 3, 15, stone2Image);
+		cube(100, 3, 15, stoneImage);
 	}glPopMatrix();
 #pragma endregion
 
@@ -439,14 +533,14 @@ void singleTrainLine(float x = 0, float y = 0, float z = 0, float angle = 0, flo
 		//horizontal Beam
 		glPushMatrix(); {
 			glColor3f(0.4, 0, 0.2);
-			glTranslatef(0, 25*i, 146);
+			glTranslatef(0, 25 * i, 146);
 			cube(25, 2, 1, stone2Image);
 		}glPopMatrix();
 
 		//horizontal Beam
 		glPushMatrix(); {
 			glColor3f(0.4, 0, 0.2);
-			glTranslatef(0, -25*i, 146);
+			glTranslatef(0, -25 * i, 146);
 			cube(25, 2, 1, stone2Image);
 		}glPopMatrix();
 	}
@@ -456,7 +550,7 @@ void singleTrainLine(float x = 0, float y = 0, float z = 0, float angle = 0, flo
 void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float rx = 0, float ry = 0, float rz = 0) {
 	glPushMatrix(); {
 		glRotatef(angle, rx, ry, rz);
-		glTranslatef(x, y, 10+z);
+		glTranslatef(x, y, 10 + z);
 
 		// Left Part
 		glPushMatrix(); {
@@ -480,7 +574,7 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 				glPushMatrix(); {
 					glEnable(GL_CLIP_PLANE1); {
 						glEnable(GL_CLIP_PLANE0); {
-							glColor3f(0, 0.3, 0.8);
+							glColor3f(0.9, 0.9, 0.9);
 							glPushMatrix(); {
 								glRotatef(90, 1, 0, 0);
 								glutSolidTorus(10, 100, 80, 150);
@@ -514,7 +608,7 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 				glPushMatrix(); {
 					glEnable(GL_CLIP_PLANE1); {
 						glEnable(GL_CLIP_PLANE0); {
-							glColor3f(0, 0.3, 0.8);
+							glColor3f(0.9, 0.9, 0.9);
 							glPushMatrix(); {
 								glRotatef(90, 1, 0, 0);
 								glutSolidTorus(10, 100, 80, 150);
@@ -526,7 +620,7 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 		}glPopMatrix();
 
 		// Bottom Cube
-		glColor3f(0, 0.3, 0.8);
+		glColor3f(0.9, 0.9, 0.9);
 		glPushMatrix(); {
 			glTranslatef(0, 0, 40);
 			glScalef(60, 20, 80);
@@ -535,7 +629,7 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 
 
 		// Upper Cube
-		glColor3f(0, 0.3, 0.8);
+		glColor3f(0.9, 0.9, 0.9);
 		glPushMatrix(); {
 			glTranslatef(0, 0, 101);
 			glScalef(90, 15, 15);
@@ -543,23 +637,16 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 		}glPopMatrix();
 
 		// Upper Cube
-		glColor3f(0, 0.3, 0.8);
+		glColor3f(0.9, 0.9, 0.9);
 		glPushMatrix(); {
 			glTranslatef(0, 0, 85);
 			glScalef(60, 15, 20);
 			glutSolidCube(1);
 		}glPopMatrix();
 
-		// Base
-		/*glColor3f(0.39, 0.517, 0.56);
-		glPushMatrix(); {
-			glTranslatef(0, 0, -5);
-			glScalef(100, 40, 10);
-			glutSolidCube(1);
-		}glPopMatrix();*/
+
 
 		cube(50, 20, 20, stoneImage);
-
 		singleTrainLine();
 		singleRoad();
 	}glPopMatrix();
@@ -567,8 +654,8 @@ void singlePiller(float x = 0, float y = 0, float z = 0, float angle = 0, float 
 
 
 void piller() {
-	for (int i = 0; i <= 8; i++) {
-		singlePiller(0, i*300);
+	for (int i = 0; i <= 15; i++) {
+		singlePiller(0, i * 300);
 		singlePiller(0, i*-300);
 	}
 }
@@ -579,13 +666,13 @@ void waterBody() {
 		glColor3f(1, 1, 1);
 		glBegin(GL_QUADS); {
 			glTexCoord2f(0, 1);
-			glVertex3f(-2000, 2000 , 0);
+			glVertex3f(-5000, 5000, 0);
 			glTexCoord2f(0, 0);
-			glVertex3f(-2000, -2000, 0);
+			glVertex3f(-5000, -5000, 0);
 			glTexCoord2f(1, 0);
-			glVertex3f(2000, -2000, 0);
+			glVertex3f(5000, -5000, 0);
 			glTexCoord2f(1, 1);
-			glVertex3f(2000, 2000, 0);
+			glVertex3f(5000, 5000, 0);
 		}glEnd();
 	}glDisable(GL_TEXTURE_2D);
 }
@@ -597,8 +684,7 @@ void trainLine() {
 void myObjects() {
 	waterBody();
 	piller();
-	//trainLine();
-	
+	//car();
 }
 
 void gridAndAxis() {

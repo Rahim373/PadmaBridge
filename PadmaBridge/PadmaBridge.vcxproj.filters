@@ -13,14 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="images">
-      <UniqueIdentifier>{239f0856-90b0-4a3f-b59c-b4b1838b35cd}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\images\grass.bmp">
-      <Filter>images</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
